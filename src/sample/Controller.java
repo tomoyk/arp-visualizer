@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,10 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.Process;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Controller {
 
@@ -56,11 +54,9 @@ public class Controller {
         final int columnSize = gridPane.getColumnConstraints().size();
 
         // 画像を追加
+        /*
         for(int row=0;row<rowSize;row++) { // 行
             for(int column=0;column<columnSize;column++){ // 列
-
-                // TextField userTextField = new TextField();
-                // gridPane.add(userTextField, column, row);
 
                 Image image = new Image("images/apple.png");
                 ImageView iview = new ImageView();
@@ -68,8 +64,30 @@ public class Controller {
                 iview.setFitWidth(100); // 画像の幅
                 iview.setPreserveRatio(true); // 縦横比を保持
                 iview.setSmooth(true); // なめらかに張る
+
+                gridPane.setAlignment(Pos.BOTTOM_RIGHT); // 中央に配置
                 gridPane.add(iview, column, row);
+
+                Label label = new Label("hello"+counter);
+                gridPane.add(label, column,row);
+
+                counter++;
+
             }
+        }*/
+
+        int counter = 0; // カウンタ
+
+        Set<Map.Entry<String, String>> addrsSet = addrs.entrySet();
+        for(Map.Entry<String, String> addr : addrsSet){
+
+            int x = counter % columnSize;
+            int y = counter / rowSize;
+
+            Label label = new Label(addr.getKey());
+            gridPane.add(label, x,y);
+
+            counter++;
         }
     }
 
