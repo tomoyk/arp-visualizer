@@ -6,6 +6,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
@@ -54,9 +56,21 @@ public class Controller {
         final int columnSize = gridPane.getColumnConstraints().size();
 
         // 画像を追加
-        TextField userTextField = new TextField();
-        gridPane.add(userTextField, 1, 1);
+        for(int row=0;row<rowSize;row++) { // 行
+            for(int column=0;column<columnSize;column++){ // 列
 
+                // TextField userTextField = new TextField();
+                // gridPane.add(userTextField, column, row);
+
+                Image image = new Image("images/apple.png");
+                ImageView iview = new ImageView();
+                iview.setImage(image); // ImageViewに画像を張る
+                iview.setFitWidth(100); // 画像の幅
+                iview.setPreserveRatio(true); // 縦横比を保持
+                iview.setSmooth(true); // なめらかに張る
+                gridPane.add(iview, column, row);
+            }
+        }
     }
 
     @FXML

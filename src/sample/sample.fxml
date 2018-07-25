@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <GridPane alignment="center" hgap="10" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
@@ -43,9 +42,6 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-         <children>
-            <Circle fx:id="hoge" fill="DODGERBLUE" radius="62.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="1" />
-         </children>
       </GridPane>
       <SplitPane focusTraversable="false" prefHeight="160.0" prefWidth="200.0" scaleShape="false" GridPane.rowIndex="2">
         <items>
