@@ -77,6 +77,7 @@ public class Controller {
         }*/
 
         int counter = 0; // カウンタ
+        MacAddrManage mam = new MacAddrManage();
 
         Set<Map.Entry<String, String>> addrsSet = addrs.entrySet();
         for(Map.Entry<String, String> addr : addrsSet){
@@ -84,8 +85,10 @@ public class Controller {
             int x = counter % columnSize;
             int y = counter / rowSize;
 
-            Label label = new Label(addr.getKey());
-            gridPane.add(label, x,y);
+            String myIp = addr.getKey();
+            String myMac = addr.getValue();
+            Label text = new Label(myIp + mam.macToVendor(myMac));
+            gridPane.add(text, x,y);
 
             counter++;
         }
