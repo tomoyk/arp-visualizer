@@ -2,28 +2,26 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.Process;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class Controller {
 
     @FXML
-    public TextField addressBox;
     public GridPane gridPane;
+    public Label statusLabel;
 
     /**
      * Searchボタンを押下したときの処理
@@ -32,19 +30,8 @@ public class Controller {
     @FXML
     public void submitSearch(ActionEvent event) throws IOException {
 
-        try {
-            String s = addressBox.getText();
-            String[] ss = s.split("/");
-            System.out.println("入力された値1: " + ss[0]);
-            System.out.println("入力された値2: " + ss[1]);
-        }catch (Exception e){
-            // Nothing
-        }
-
-        addressBox.setText("");
-
-        // マウスクリックした時の動作
-        // mouseEntered(event);
+        // メッセージを変更
+        statusLabel.setText("端末の一覧を表示しています.");
 
         // ARPテーブル一覧を取得
         Map addrs = execArp();
@@ -53,78 +40,53 @@ public class Controller {
         final int rowSize = gridPane.getRowConstraints().size();
         final int columnSize = gridPane.getColumnConstraints().size();
 
-        // 画像を追加
-        /*
-        for(int row=0;row<rowSize;row++) { // 行
-            for(int column=0;column<columnSize;column++){ // 列
-
-                Image image = new Image("images/apple.png");
-                ImageView iview = new ImageView();
-                iview.setImage(image); // ImageViewに画像を張る
-                iview.setFitWidth(100); // 画像の幅
-                iview.setPreserveRatio(true); // 縦横比を保持
-                iview.setSmooth(true); // なめらかに張る
-
-                gridPane.setAlignment(Pos.BOTTOM_RIGHT); // 中央に配置
-                gridPane.add(iview, column, row);
-
-                Label label = new Label("hello"+counter);
-                gridPane.add(label, column,row);
-
-                counter++;
-
-            }
-        }*/
-
         int counter = 0; // カウンタ
         MacAddrManage mam = new MacAddrManage();
 
         Set<Map.Entry<String, String>> addrsSet = addrs.entrySet();
         for(Map.Entry<String, String> addr : addrsSet){
 
-            int x = counter % columnSize;
-            int y = counter / rowSize;
+            int y = counter % (columnSize-1);
+            int x = counter / (columnSize-1);
+            // System.out.println(x + " - " + y);
 
-            String myIp = addr.getKey();
-            String myMac = addr.getValue();
-            Label text = new Label(myIp + mam.macToVendor(myMac));
-            gridPane.add(text, x,y);
+            // グリッド数を超える場合
+            if(columnSize-1 < x || rowSize-1 < y){
+                break;
+            }
+
+            String myIp = addr.getKey(); // IPアドレス
+            String myMac = addr.getValue(); // Macアドレス
+
+            // ベンダの割り出し
+            String myVendor = mam.macToVendor(myMac);
+            if(myVendor==null){
+                myVendor = "Unknown";
+            }
+
+            // グリッドへの表示
+            Label text = new Label(myIp + "\n" + myVendor); // 表示する文字列を組み立て
+            text.setTextFill(Color.MAGENTA); // 文字色
+            text.setStyle("-fx-font-weight: bold");
+            text.setStyle("-fx-effect: dropshadow( gaussian , rgba(255,255,255,1.0) , 0,0,1,1 );");
+            text.setFont(new Font("Arial", 16));
+
+            // 画像の描画
+            String filename = myVendor.replaceAll(" ", "").toLowerCase();
+
+            Image image = new Image("images/"+filename+".png");
+            ImageView ivie = new ImageView();
+            ivie.setImage(image); // ImageViewに画像を張る
+            ivie.setFitWidth(100); // 画像の幅
+            ivie.setPreserveRatio(true); // 縦横比を保持
+            ivie.setSmooth(true); // なめらかに張る
+
+            // gridPane.setAlignment(Pos.TOP_CENTER); // 中央に配置
+            gridPane.add(ivie, x, y);
+            gridPane.add(text, x,y); // パネルへ追加
 
             counter++;
         }
-    }
-
-    @FXML
-    private void mouseEntered(ActionEvent e) {
-        Node source = (Node)e.getSource();
-        Integer colIndex = GridPane.getColumnIndex(source);
-        Integer rowIndex = GridPane.getRowIndex(source);
-        System.out.printf("Mouse entered cell [%d, %d]%n", colIndex.intValue(), rowIndex.intValue());
-    }
-
-    @FXML
-    public void drawShape(){
-
-        System.out.println("drawShape");
-
-        GridPane gridPane = new GridPane();
-        gridPane.setGridLinesVisible(true);
-        Button button = new Button("hello");
-        gridPane.add(button, 2, 2);
-
-
-
-        HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(button);
-        gridPane.add(hbBtn, 1, 4);
-
-        /*
-        GridPane.setRowIndex(button, 3);
-        GridPane.setColumnIndex(button, 2);
-        Label label = new Label();
-        GridPane.setConstraints(label, 2, 0); // column=2 row=0
-        */
     }
 
     /**
@@ -135,7 +97,7 @@ public class Controller {
     public Map<String, String> execArp() throws IOException {
 
         // 実行するコマンド
-        final String COMMAND = "arp -a";
+        final String COMMAND = "cat /Users/tkoyama/result"; // "arp -a";
 
         // 実行結果を保持するMap
         Map<String,String> addrs = new TreeMap<>();
@@ -173,17 +135,12 @@ public class Controller {
                 continue;
             }
 
-            System.out.println("[RESULT] ip="+ipAddr+",\t mac="+macAddr);
+            // System.out.println("[RESULT] ip="+ipAddr+",\t mac="+macAddr);
 
             // イメージ: addrs[ipAddrs] = macAddr;
             addrs.put(ipAddr, macAddr);
 
         }
-
-        // Debug::
-        /*for(String key : addrs.keySet()){
-            System.out.println("ip="+key+", mac="+addrs.get(key));
-        }*/
 
         return addrs;
     }

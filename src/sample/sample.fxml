@@ -2,8 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -48,20 +48,20 @@
             <GridPane cacheShape="false" centerShape="false" scaleShape="false">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="379.0" minWidth="10.0" prefWidth="379.0" />
               </columnConstraints>
                <children>
-                  <Button mnemonicParsing="false" onAction="#submitSearch" prefHeight="50.0" prefWidth="100.0" text="Search" GridPane.columnIndex="1">
+                  <Button mnemonicParsing="false" onAction="#submitSearch" prefHeight="43.0" prefWidth="381.0" text="Search">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <TextField fx:id="addressBox" prefHeight="50.0" prefWidth="330.0" promptText="192.168.0.0/24">
+                  <Label fx:id="statusLabel" alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="375.0" text="Searchボタンを押してください." GridPane.columnIndex="2">
                      <font>
-                        <Font size="24.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
-                  </TextField>
+                  </Label>
                </children>
                <rowConstraints>
                   <RowConstraints />
