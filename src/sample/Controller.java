@@ -9,10 +9,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -28,7 +26,7 @@ public class Controller {
      * @param event イベント処理
      */
     @FXML
-    public void submitSearch(ActionEvent event) throws IOException {
+    public void submitSearch(ActionEvent event) throws IOException, InvocationTargetException {
 
         // メッセージを変更
         statusLabel.setText("端末の一覧を表示しています.");
@@ -61,7 +59,7 @@ public class Controller {
             // ベンダの割り出し
             String myVendor = mam.macToVendor(myMac);
             if(myVendor==null){
-                myVendor = "Unknown";
+                myVendor = "unknown";
             }
 
             // グリッドへの表示
@@ -72,7 +70,10 @@ public class Controller {
             text.setFont(new Font("Arial", 16));
 
             // 画像の描画
-            String filename = myVendor.replaceAll(" ", "").toLowerCase();
+            String filename = myVendor.toLowerCase().replaceAll("\\W", " ");
+            if( new File(filename).exists() == false ){ // ファイルが存在しない
+                filename = "unknown";
+            }
 
             Image image = new Image("images/"+filename+".png");
             ImageView ivie = new ImageView();
@@ -97,7 +98,7 @@ public class Controller {
     public Map<String, String> execArp() throws IOException {
 
         // 実行するコマンド
-        final String COMMAND = "cat /Users/tkoyama/result"; // "arp -a";
+        final String COMMAND = "arp -a"; // cat result
 
         // 実行結果を保持するMap
         Map<String,String> addrs = new TreeMap<>();

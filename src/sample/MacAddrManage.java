@@ -1,31 +1,42 @@
 package sample;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class MacAddrManage {
 
+    // KEY:   [A-Z0-9]{2}-[A-Z0-9]{2}-[A-Z0-9]{2}
+    // VALUE: [\\w\\s,\\.]+
     public Map<String, String> macAddrs = new TreeMap<>();
 
     // 参考: http://www.vor.jp/oui/oui.html
 
+    /**
+     * Macアドレスからベンダーを割り出すメソッド
+     *
+     */
     public String macToVendor(String targetMac){
 
-        for(String key : macAddrs.keySet()){
+        // 探すmacAddressを小文字に and -を:へ
+        String targetMacLower = targetMac.toLowerCase().replaceAll("-", ":");
 
-            // - to :
-            String tmp = key.replaceAll("-", ":");
+        // 探すmacAddressのVendorを抽出
+        String targetMacVend = targetMacLower.split(":")[0] +":"+ targetMacLower.split(":")[1] +":"+ targetMacLower.split(":")[2];
 
-            // LowerCase
-            String tmp2 = tmp.toLowerCase();
+        // あからじめ作成したベンダー一覧から探す
+        for(String listedMac : macAddrs.keySet()){
 
-            // targetMac[vendor]
-            String targetMacVend = targetMac.split(":")[0] +":"+ targetMac.split(":")[1] +":"+ targetMac.split(":")[2];
+            // -を: and 小文字に
+            String listedMacLower = listedMac.replaceAll("-", ":").toLowerCase();
 
-            // System.out.println(targetMacVend + " \t " + tmp2);
-
-            if(targetMacVend.equals(tmp2)){
-                return macAddrs.get(key);
+            // 一致するか判定
+            // System.out.println(listedMacLower + " vs " + targetMacVend);
+            if(targetMacVend.equals(listedMacLower)){
+                return macAddrs.get(listedMac);
             }
         }
 
@@ -35,485 +46,34 @@ public class MacAddrManage {
 
     public MacAddrManage(){
 
-        macAddrs.put("28-16-AD", "INTEL");
-        macAddrs.put("A4-34-D9", "INTEL");
-        macAddrs.put("00-0A-28", "Motorola");
-        macAddrs.put("FC-15-B4", "Hewlett Packard");
-        macAddrs.put("00-00-0E", "Fujitsu");
-        macAddrs.put("E8-E7-32", "Alcatel");
-        macAddrs.put("F4-5C-89", "Apple");
-        macAddrs.put("78:7B:8A", "Apple");
+        BufferedReader br = null;
+        try {
+             br = new BufferedReader(new FileReader("/Users/tkoyama/IdeaProjects/sample01/src/vendorList2"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        // Apple
-        macAddrs.put("00-03-93", "Apple");
-        macAddrs.put("00-05-02", "Apple");
-        macAddrs.put("00-0A-27", "Apple");
-        macAddrs.put("00-0A-95", "Apple");
-        macAddrs.put("00-0D-93", "Apple");
-        macAddrs.put("00-10-FA", "Apple");
-        macAddrs.put("00-11-24", "Apple");
-        macAddrs.put("00-14-51", "Apple");
-        macAddrs.put("00-16-CB", "Apple");
-        macAddrs.put("00-17-F2", "Apple");
-        macAddrs.put("00-19-E3", "Apple");
-        macAddrs.put("00-1B-63", "Apple");
-        macAddrs.put("00-1C-B3", "Apple");
-        macAddrs.put("00-1D-4F", "Apple");
-        macAddrs.put("00-1E-52", "Apple");
-        macAddrs.put("00-1E-C2", "Apple");
-        macAddrs.put("00-1F-5B", "Apple");
-        macAddrs.put("00-1F-F3", "Apple");
-        macAddrs.put("00-21-E9", "Apple");
-        macAddrs.put("00-22-41", "Apple");
-        macAddrs.put("00-23-12", "Apple");
-        macAddrs.put("00-23-32", "Apple");
-        macAddrs.put("00-23-6C", "Apple");
-        macAddrs.put("00-23-DF", "Apple");
-        macAddrs.put("00-24-36", "Apple");
-        macAddrs.put("00-25-00", "Apple");
-        macAddrs.put("00-25-4B", "Apple");
-        macAddrs.put("00-25-BC", "Apple");
-        macAddrs.put("00-26-08", "Apple");
-        macAddrs.put("00-26-4A", "Apple");
-        macAddrs.put("00-26-B0", "Apple");
-        macAddrs.put("00-26-BB", "Apple");
-        macAddrs.put("00-30-65", "Apple");
-        macAddrs.put("00-3E-E1", "Apple");
-        macAddrs.put("00-50-E4", "Apple");
-        macAddrs.put("00-61-71", "Apple");
-        macAddrs.put("00-88-65", "Apple");
-        macAddrs.put("00-A0-40", "Apple");
-        macAddrs.put("00-C6-10", "Apple");
-        macAddrs.put("00-F4-B9", "Apple");
-        macAddrs.put("00-F7-6F", "Apple");
-        macAddrs.put("04-0C-CE", "Apple");
-        macAddrs.put("04-15-52", "Apple");
-        macAddrs.put("04-1E-64", "Apple");
-        macAddrs.put("04-26-65", "Apple");
-        macAddrs.put("04-48-9A", "Apple");
-        macAddrs.put("04-54-53", "Apple");
-        macAddrs.put("04-DB-56", "Apple,");
-        macAddrs.put("04-E5-36", "Apple");
-        macAddrs.put("04-F1-3E", "Apple");
-        macAddrs.put("04-F7-E4", "Apple");
-        macAddrs.put("08-00-07", "Apple");
-        macAddrs.put("08-70-45", "Apple");
-        macAddrs.put("0C-30-21", "Apple");
-        macAddrs.put("0C-3E-9F", "Apple,");
-        macAddrs.put("0C-4D-E9", "Apple");
-        macAddrs.put("0C-74-C2", "Apple");
-        macAddrs.put("0C-77-1A", "Apple");
-        macAddrs.put("10-1C-0C", "Apple");
-        macAddrs.put("10-40-F3", "Apple");
-        macAddrs.put("10-93-E9", "Apple");
-        macAddrs.put("10-9A-DD", "Apple");
-        macAddrs.put("10-DD-B1", "Apple");
-        macAddrs.put("14-10-9F", "Apple");
-        macAddrs.put("14-5A-05", "Apple");
-        macAddrs.put("14-8F-C6", "Apple");
-        macAddrs.put("14-99-E2", "Apple,");
-        macAddrs.put("18-20-32", "Apple");
-        macAddrs.put("18-34-51", "Apple");
-        macAddrs.put("18-9E-FC", "Apple");
-        macAddrs.put("18-AF-61", "Apple,");
-        macAddrs.put("18-AF-8F", "Apple");
-        macAddrs.put("18-E7-F4", "Apple");
-        macAddrs.put("1C-1A-C0", "Apple");
-        macAddrs.put("1C-AB-A7", "Apple");
-        macAddrs.put("1C-E6-2B", "Apple");
-        macAddrs.put("20-7D-74", "Apple");
-        macAddrs.put("20-A2-E4", "Apple");
-        macAddrs.put("20-C9-D0", "Apple");
-        macAddrs.put("24-A0-74", "Apple");
-        macAddrs.put("24-A2-E1", "Apple,");
-        macAddrs.put("24-AB-81", "Apple");
-        macAddrs.put("24-E3-14", "Apple");
-        macAddrs.put("28-0B-5C", "Apple");
-        macAddrs.put("28-37-37", "Apple");
-        macAddrs.put("28-6A-B8", "Apple");
-        macAddrs.put("28-6A-BA", "Apple");
-        macAddrs.put("28-CF-DA", "Apple");
-        macAddrs.put("28-CF-E9", "Apple");
-        macAddrs.put("28-E0-2C", "Apple");
-        macAddrs.put("28-E1-4C", "Apple,");
-        macAddrs.put("28-E7-CF", "Apple");
-        macAddrs.put("2C-B4-3A", "Apple");
-        macAddrs.put("2C-BE-08", "Apple");
-        macAddrs.put("2C-F0-EE", "Apple");
-        macAddrs.put("30-10-E4", "Apple,");
-        macAddrs.put("30-90-AB", "Apple");
-        macAddrs.put("30-F7-C5", "Apple");
-        macAddrs.put("34-15-9E", "Apple");
-        macAddrs.put("34-51-C9", "Apple");
-        macAddrs.put("34-A3-95", "Apple");
-        macAddrs.put("34-C0-59", "Apple");
-        macAddrs.put("34-E2-FD", "Apple");
-        macAddrs.put("38-0F-4A", "Apple");
-        macAddrs.put("38-48-4C", "Apple");
-        macAddrs.put("3C-07-54", "Apple");
-        macAddrs.put("3C-15-C2", "Apple");
-        macAddrs.put("3C-AB-8E", "Apple");
-        macAddrs.put("3C-D0-F8", "Apple");
-        macAddrs.put("3C-E0-72", "Apple");
-        macAddrs.put("40-30-04", "Apple");
-        macAddrs.put("40-3C-FC", "Apple");
-        macAddrs.put("40-6C-8F", "Apple");
-        macAddrs.put("40-A6-D9", "Apple");
-        macAddrs.put("40-B3-95", "Apple");
-        macAddrs.put("40-D3-2D", "Apple");
-        macAddrs.put("44-2A-60", "Apple");
-        macAddrs.put("44-4C-0C", "Apple");
-        macAddrs.put("44-D8-84", "Apple");
-        macAddrs.put("44-FB-42", "Apple");
-        macAddrs.put("48-43-7C", "Apple");
-        macAddrs.put("48-60-BC", "Apple");
-        macAddrs.put("48-74-6E", "Apple");
-        macAddrs.put("48-D7-05", "Apple");
-        macAddrs.put("4C-8D-79", "Apple");
-        macAddrs.put("4C-B1-99", "Apple");
-        macAddrs.put("50-EA-D6", "Apple");
-        macAddrs.put("54-26-96", "Apple");
-        macAddrs.put("54-72-4F", "Apple");
-        macAddrs.put("54-AE-27", "Apple");
-        macAddrs.put("54-E4-3A", "Apple,");
-        macAddrs.put("54-EA-A8", "Apple,");
-        macAddrs.put("58-1F-AA", "Apple");
-        macAddrs.put("58-55-CA", "Apple");
-        macAddrs.put("58-B0-35", "Apple");
-        macAddrs.put("5C-59-48", "Apple");
-        macAddrs.put("5C-8D-4E", "Apple");
-        macAddrs.put("5C-95-AE", "Apple");
-        macAddrs.put("5C-96-9D", "Apple");
-        macAddrs.put("5C-97-F3", "Apple");
-        macAddrs.put("5C-F9-38", "Apple,");
-        macAddrs.put("60-03-08", "Apple");
-        macAddrs.put("60-33-4B", "Apple");
-        macAddrs.put("60-69-44", "Apple,");
-        macAddrs.put("60-92-17", "Apple");
-        macAddrs.put("60-C5-47", "Apple");
-        macAddrs.put("60-D9-C7", "Apple");
-        macAddrs.put("60-F8-1D", "Apple");
-        macAddrs.put("60-FA-CD", "Apple");
-        macAddrs.put("60-FB-42", "Apple");
-        macAddrs.put("60-FE-C5", "Apple");
-        macAddrs.put("64-20-0C", "Apple");
-        macAddrs.put("64-76-BA", "Apple");
-        macAddrs.put("64-A3-CB", "Apple");
-        macAddrs.put("64-B9-E8", "Apple");
-        macAddrs.put("64-E6-82", "Apple");
-        macAddrs.put("68-09-27", "Apple");
-        macAddrs.put("68-5B-35", "Apple");
-        macAddrs.put("68-96-7B", "Apple");
-        macAddrs.put("68-9C-70", "Apple");
-        macAddrs.put("68-A8-6D", "Apple");
-        macAddrs.put("68-AE-20", "Apple");
-        macAddrs.put("68-D9-3C", "Apple");
-        macAddrs.put("6C-3E-6D", "Apple");
-        macAddrs.put("6C-40-08", "Apple");
-        macAddrs.put("6C-70-9F", "Apple");
-        macAddrs.put("6C-94-F8", "Apple");
-        macAddrs.put("6C-C2-6B", "Apple");
-        macAddrs.put("70-11-24", "Apple");
-        macAddrs.put("70-3E-AC", "Apple");
-        macAddrs.put("70-56-81", "Apple");
-        macAddrs.put("70-73-CB", "Apple");
-        macAddrs.put("70-CD-60", "Apple");
-        macAddrs.put("70-DE-E2", "Apple");
-        macAddrs.put("74-E1-B6", "Apple");
-        macAddrs.put("74-E2-F5", "Apple");
-        macAddrs.put("78-31-C1", "Apple");
-        macAddrs.put("78-3A-84", "Apple");
-        macAddrs.put("78-6C-1C", "Apple");
-        macAddrs.put("78-7E-61", "Apple");
-        macAddrs.put("78-A3-E4", "Apple");
-        macAddrs.put("78-CA-39", "Apple");
-        macAddrs.put("78-FD-94", "Apple");
-        macAddrs.put("7C-11-BE", "Apple");
-        macAddrs.put("7C-6D-62", "Apple");
-        macAddrs.put("7C-6D-F8", "Apple");
-        macAddrs.put("7C-C3-A1", "Apple");
-        macAddrs.put("7C-C5-37", "Apple");
-        macAddrs.put("7C-D1-C3", "Apple");
-        macAddrs.put("7C-F0-5F", "Apple");
-        macAddrs.put("7C-FA-DF", "Apple");
-        macAddrs.put("80-00-6E", "Apple");
-        macAddrs.put("80-49-71", "Apple");
-        macAddrs.put("80-92-9F", "Apple");
-        macAddrs.put("80-BE-05", "Apple");
-        macAddrs.put("80-E6-50", "Apple");
-        macAddrs.put("80-EA-96", "Apple");
-        macAddrs.put("84-29-99", "Apple");
-        macAddrs.put("84-38-35", "Apple");
-        macAddrs.put("84-78-8B", "Apple");
-        macAddrs.put("84-85-06", "Apple");
-        macAddrs.put("84-8E-0C", "Apple");
-        macAddrs.put("84-B1-53", "Apple");
-        macAddrs.put("84-FC-FE", "Apple");
-        macAddrs.put("88-1F-A1", "Apple");
-        macAddrs.put("88-53-95", "Apple");
-        macAddrs.put("88-63-DF", "Apple");
-        macAddrs.put("88-C6-63", "Apple");
-        macAddrs.put("88-CB-87", "Apple");
-        macAddrs.put("8C-00-6D", "Apple");
-        macAddrs.put("8C-29-37", "Apple");
-        macAddrs.put("8C-2D-AA", "Apple");
-        macAddrs.put("8C-58-77", "Apple");
-        macAddrs.put("8C-7B-9D", "Apple");
-        macAddrs.put("8C-7C-92", "Apple");
-        macAddrs.put("8C-FA-BA", "Apple");
-        macAddrs.put("90-27-E4", "Apple");
-        macAddrs.put("90-72-40", "Apple");
-        macAddrs.put("90-84-0D", "Apple");
-        macAddrs.put("90-B2-1F", "Apple");
-        macAddrs.put("90-B9-31", "Apple,");
-        macAddrs.put("90-FD-61", "Apple");
-        macAddrs.put("94-94-26", "Apple");
-        macAddrs.put("98-03-D8", "Apple");
-        macAddrs.put("98-B8-E3", "Apple");
-        macAddrs.put("98-D6-BB", "Apple");
-        macAddrs.put("98-F0-AB", "Apple");
-        macAddrs.put("98-FE-94", "Apple");
-        macAddrs.put("9C-04-EB", "Apple");
-        macAddrs.put("9C-20-7B", "Apple");
-        macAddrs.put("9C-F3-87", "Apple");
-        macAddrs.put("A0-ED-CD", "Apple");
-        macAddrs.put("A4-67-06", "Apple");
-        macAddrs.put("A4-B1-97", "Apple");
-        macAddrs.put("A4-C3-61", "Apple");
-        macAddrs.put("A4-D1-D2", "Apple");
-        macAddrs.put("A8-20-66", "Apple");
-        macAddrs.put("A8-5B-78", "Apple");
-        macAddrs.put("A8-86-DD", "Apple,");
-        macAddrs.put("A8-88-08", "Apple");
-        macAddrs.put("A8-8E-24", "Apple");
-        macAddrs.put("A8-96-8A", "Apple");
-        macAddrs.put("A8-BB-CF", "Apple");
-        macAddrs.put("A8-FA-D8", "Apple");
-        macAddrs.put("AC-3C-0B", "Apple");
-        macAddrs.put("AC-7F-3E", "Apple");
-        macAddrs.put("AC-87-A3", "Apple");
-        macAddrs.put("AC-CF-5C", "Apple");
-        macAddrs.put("AC-FD-EC", "Apple,");
-        macAddrs.put("B0-34-95", "Apple");
-        macAddrs.put("B0-65-BD", "Apple");
-        macAddrs.put("B0-9F-BA", "Apple");
-        macAddrs.put("B4-18-D1", "Apple");
-        macAddrs.put("B4-F0-AB", "Apple");
-        macAddrs.put("B8-17-C2", "Apple");
-        macAddrs.put("B8-78-2E", "Apple");
-        macAddrs.put("B8-8D-12", "Apple");
-        macAddrs.put("B8-C7-5D", "Apple");
-        macAddrs.put("B8-E8-56", "Apple");
-        macAddrs.put("B8-F6-B1", "Apple");
-        macAddrs.put("B8-FF-61", "Apple");
-        macAddrs.put("BC-3B-AF", "Apple");
-        macAddrs.put("BC-52-B7", "Apple");
-        macAddrs.put("BC-67-78", "Apple");
-        macAddrs.put("BC-92-6B", "Apple");
-        macAddrs.put("C0-63-94", "Apple");
-        macAddrs.put("C0-84-7A", "Apple");
-        macAddrs.put("C0-9F-42", "Apple");
-        macAddrs.put("C0-F2-FB", "Apple");
-        macAddrs.put("C4-2C-03", "Apple");
-        macAddrs.put("C8-2A-14", "Apple");
-        macAddrs.put("C8-33-4B", "Apple");
-        macAddrs.put("C8-6F-1D", "Apple");
-        macAddrs.put("C8-85-50", "Apple");
-        macAddrs.put("C8-B5-B7", "Apple");
-        macAddrs.put("C8-BC-C8", "Apple");
-        macAddrs.put("C8-E0-EB", "Apple");
-        macAddrs.put("C8-F6-50", "Apple");
-        macAddrs.put("CC-08-E0", "Apple");
-        macAddrs.put("CC-78-5F", "Apple");
-        macAddrs.put("D0-23-DB", "Apple");
-        macAddrs.put("D0-4F-7E", "Apple");
-        macAddrs.put("D0-E1-40", "Apple,");
-        macAddrs.put("D4-9A-20", "Apple");
-        macAddrs.put("D4-F4-6F", "Apple");
-        macAddrs.put("D8-00-4D", "Apple");
-        macAddrs.put("D8-30-62", "Apple");
-        macAddrs.put("D8-96-95", "Apple");
-        macAddrs.put("D8-9E-3F", "Apple");
-        macAddrs.put("D8-A2-5E", "Apple");
-        macAddrs.put("D8-BB-2C", "Apple");
-        macAddrs.put("D8-CF-9C", "Apple");
-        macAddrs.put("D8-D1-CB", "Apple");
-        macAddrs.put("DC-2B-61", "Apple");
-        macAddrs.put("DC-86-D8", "Apple,");
-        macAddrs.put("DC-9B-9C", "Apple");
-        macAddrs.put("E0-66-78", "Apple");
-        macAddrs.put("E0-B5-2D", "Apple");
-        macAddrs.put("E0-B9-BA", "Apple");
-        macAddrs.put("E0-C9-7A", "Apple");
-        macAddrs.put("E0-F5-C6", "Apple");
-        macAddrs.put("E0-F8-47", "Apple");
-        macAddrs.put("E4-25-E7", "Apple");
-        macAddrs.put("E4-8B-7F", "Apple");
-        macAddrs.put("E4-98-D6", "Apple,");
-        macAddrs.put("E4-C6-3D", "Apple,");
-        macAddrs.put("E4-CE-8F", "Apple");
-        macAddrs.put("E8-04-0B", "Apple");
-        macAddrs.put("E8-06-88", "Apple");
-        macAddrs.put("E8-80-2E", "Apple");
-        macAddrs.put("E8-8D-28", "Apple");
-        macAddrs.put("EC-35-86", "Apple");
-        macAddrs.put("EC-85-2F", "Apple");
-        macAddrs.put("F0-24-75", "Apple");
-        macAddrs.put("F0-B4-79", "Apple");
-        macAddrs.put("F0-C1-F1", "Apple,");
-        macAddrs.put("F0-CB-A1", "Apple");
-        macAddrs.put("F0-D1-A9", "Apple");
-        macAddrs.put("F0-DB-F8", "Apple");
-        macAddrs.put("F0-DC-E2", "Apple");
-        macAddrs.put("F0-F6-1C", "Apple");
-        macAddrs.put("F4-1B-A1", "Apple");
-        macAddrs.put("F4-37-B7", "Apple");
-        macAddrs.put("F4-F1-5A", "Apple");
-        macAddrs.put("F4-F9-51", "Apple");
-        macAddrs.put("F8-1E-DF", "Apple");
-        macAddrs.put("F8-27-93", "Apple,");
-        macAddrs.put("FC-25-3F", "Apple");
+        for(;;){
+            try {
+                String line = br.readLine();
 
-        macAddrs.put("60-A4-4C", "ASUSTek");
+                // 末尾に到達
+                if(line == null){
+                    break;
+                }
 
-        // Intel
-        macAddrs.put("00-02-B3", "Intel");
-        macAddrs.put("00-03-47", "Intel");
-        macAddrs.put("00-04-23", "Intel");
-        macAddrs.put("00-07-E9", "Intel");
-        macAddrs.put("00-0C-F1", "Intel");
-        macAddrs.put("00-0E-0C", "Intel");
-        macAddrs.put("00-0E-35", "Intel");
-        macAddrs.put("00-11-11", "Intel");
-        macAddrs.put("00-12-F0", "Intel");
-        macAddrs.put("00-13-02", "Intel");
-        macAddrs.put("00-13-20", "Intel");
-        macAddrs.put("00-13-CE", "Intel");
-        macAddrs.put("00-13-E8", "Intel");
-        macAddrs.put("00-15-00", "Intel");
-        macAddrs.put("00-15-17", "Intel");
-        macAddrs.put("00-16-6F", "Intel");
-        macAddrs.put("00-16-76", "Intel");
-        macAddrs.put("00-16-EA", "Intel");
-        macAddrs.put("00-16-EB", "Intel");
-        macAddrs.put("00-18-DE", "Intel");
-        macAddrs.put("00-19-D1", "Intel");
-        macAddrs.put("00-19-D2", "Intel");
-        macAddrs.put("00-1B-21", "Intel");
-        macAddrs.put("00-1B-77", "Intel");
-        macAddrs.put("00-1C-BF", "Intel");
-        macAddrs.put("00-1C-C0", "Intel");
-        macAddrs.put("00-1D-40", "Intel");
-        macAddrs.put("00-1D-E0", "Intel");
-        macAddrs.put("00-1D-E1", "Intel");
-        macAddrs.put("00-1E-64", "Intel");
-        macAddrs.put("00-1E-65", "Intel");
-        macAddrs.put("00-1E-67", "Intel");
-        macAddrs.put("00-1F-3B", "Intel");
-        macAddrs.put("00-1F-3C", "Intel");
-        macAddrs.put("00-20-7B", "Intel");
-        macAddrs.put("00-21-5C", "Intel");
-        macAddrs.put("00-21-5D", "Intel");
-        macAddrs.put("00-21-6A", "Intel");
-        macAddrs.put("00-21-6B", "Intel");
-        macAddrs.put("00-22-FA", "Intel");
-        macAddrs.put("00-22-FB", "Intel");
-        macAddrs.put("00-23-14", "Intel");
-        macAddrs.put("00-23-15", "Intel");
-        macAddrs.put("00-24-D6", "Intel");
-        macAddrs.put("00-24-D7", "Intel");
-        macAddrs.put("00-26-C6", "Intel");
-        macAddrs.put("00-26-C7", "Intel");
-        macAddrs.put("00-27-0E", "Intel");
-        macAddrs.put("00-27-10", "Intel");
-        macAddrs.put("00-50-F1", "Intel");
-        macAddrs.put("00-C2-C6", "Intel");
-        macAddrs.put("00-DB-DF", "Intel");
-        macAddrs.put("08-11-96", "Intel");
-        macAddrs.put("08-D4-0C", "Intel");
-        macAddrs.put("0C-8B-FD", "Intel");
-        macAddrs.put("0C-D2-92", "Intel");
-        macAddrs.put("10-0B-A9", "Intel");
-        macAddrs.put("10-4A-7D", "Intel");
-        macAddrs.put("18-3D-A2", "Intel");
-        macAddrs.put("24-77-03", "Intel");
-        macAddrs.put("28-B2-BD", "Intel");
-        macAddrs.put("30-3A-64", "Intel");
-        macAddrs.put("34-02-86", "Intel");
-        macAddrs.put("34-13-E8", "Intel");
-        macAddrs.put("34-DE-1A", "Intel");
-        macAddrs.put("34-E6-AD", "Intel");
-        macAddrs.put("3C-A9-F4", "Intel");
-        macAddrs.put("40-25-C2", "Intel");
-        macAddrs.put("44-85-00", "Intel");
-        macAddrs.put("48-51-B7", "Intel");
-        macAddrs.put("4C-79-BA", "Intel");
-        macAddrs.put("4C-80-93", "Intel");
-        macAddrs.put("4C-EB-42", "Intel");
-        macAddrs.put("50-2D-A2", "Intel");
-        macAddrs.put("58-91-CF", "Intel");
-        macAddrs.put("58-94-6B", "Intel");
-        macAddrs.put("5C-51-4F", "Intel");
-        macAddrs.put("5C-C5-D4", "Intel");
-        macAddrs.put("5C-D2-E4", "Intel");
-        macAddrs.put("5C-E0-C5", "Intel");
-        macAddrs.put("60-36-DD", "Intel");
-        macAddrs.put("60-57-18", "Intel");
-        macAddrs.put("60-67-20", "Intel");
-        macAddrs.put("60-6C-66", "Intel");
-        macAddrs.put("64-80-99", "Intel");
-        macAddrs.put("64-D4-DA", "Intel");
-        macAddrs.put("68-05-CA", "Intel");
-        macAddrs.put("68-17-29", "Intel");
-        macAddrs.put("68-5D-43", "Intel");
-        macAddrs.put("6C-29-95", "Intel");
-        macAddrs.put("6C-88-14", "Intel");
-        macAddrs.put("74-E5-0B", "Intel");
-        macAddrs.put("78-92-9C", "Intel");
-        macAddrs.put("78-FF-57", "Intel");
-        macAddrs.put("7C-7A-91", "Intel");
-        macAddrs.put("7C-CC-B8", "Intel");
-        macAddrs.put("80-00-0B", "Intel");
-        macAddrs.put("80-19-34", "Intel");
-        macAddrs.put("80-86-F2", "Intel");
-        macAddrs.put("80-9B-20", "Intel");
-        macAddrs.put("84-3A-4B", "Intel");
-        macAddrs.put("84-A6-C8", "Intel");
-        macAddrs.put("88-53-2E", "Intel");
-        macAddrs.put("8C-70-5A", "Intel");
-        macAddrs.put("8C-A9-82", "Intel");
-        macAddrs.put("90-49-FA", "Intel");
-        macAddrs.put("90-E2-BA", "Intel");
-        macAddrs.put("98-4F-EE", "Intel");
-        macAddrs.put("9C-4E-36", "Intel");
-        macAddrs.put("A0-36-9F", "Intel");
-        macAddrs.put("A0-88-69", "Intel");
-        macAddrs.put("A0-88-B4", "Intel");
-        macAddrs.put("A0-A8-CD", "Intel");
-        macAddrs.put("A4-4E-31", "Intel");
-        macAddrs.put("AC-72-89", "Intel");
-        macAddrs.put("AC-7B-A1", "Intel");
-        macAddrs.put("AC-FD-CE", "Intel");
-        macAddrs.put("B4-B6-76", "Intel");
-        macAddrs.put("B8-03-05", "Intel");
-        macAddrs.put("B8-08-CF", "Intel");
-        macAddrs.put("B8-8A-60", "Intel");
-        macAddrs.put("B8-BF-83", "Intel");
-        macAddrs.put("BC-77-37", "Intel");
-        macAddrs.put("C4-85-08", "Intel");
-        macAddrs.put("C4-D9-87", "Intel");
-        macAddrs.put("C8-F7-33", "Intel");
-        macAddrs.put("CC-3D-82", "Intel");
-        macAddrs.put("D0-7E-35", "Intel");
-        macAddrs.put("D8-FC-93", "Intel");
-        macAddrs.put("DC-A9-71", "Intel");
-        macAddrs.put("E0-94-67", "Intel");
-        macAddrs.put("E0-9D-31", "Intel");
-        macAddrs.put("E8-2A-EA", "Intel");
-        macAddrs.put("E8-B1-FC", "Intel");
-        macAddrs.put("F4-06-69", "Intel");
-        macAddrs.put("F8-16-54", "Intel");
-        macAddrs.put("FC-F8-AE", "Intel");
+                // macアドレスとベンダー名を分割
+                String lineMac = line.split("\t")[0].replaceAll(" ", ""); // 空白を除去
+                String lineVendor = line.split("\t")[1];
+
+                // 追加
+                macAddrs.put(lineMac, lineVendor);
+                // System.out.println(lineMac + "\t\t" + lineVendor);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 }
